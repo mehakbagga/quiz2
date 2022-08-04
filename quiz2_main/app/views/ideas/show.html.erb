@@ -1,0 +1,59 @@
+<div>
+  <div>
+    <div>
+      <h3><%= @idea.title %></h3>
+      <p><%= @idea.body%></p>
+    </div>
+    <div>
+      <% if can?(:crud, @idea) %>
+        <%= link_to "Edit", edit_idea_path(@idea)%>
+        <%= link_to "Delete", idea_path(@idea), method: :delete %>
+      <% end %>
+      <% like = @idea.likes.find_by(user: current_user)%>
+      <% if like.nil? %>
+        <%= link_to "Like", idea_likes_path(@idea), method: :post %>
+      <% else %>
+        <%= link_to "Unlike", idea_like_path(@idea, like), method: :delete %>
+      <% end %>
+    </div>
+    <div>
+        <h6>By <%= @idea.user.first_name %></h6>
+        <h6><%= time_ago_in_words(@idea.created_at) %> ago</h6>
+        <h6>Likes - <%= @idea.likers.count %></h6>
+    </div>
+  </div>
+  
+  <div>
+    <% if @review.errors.messages.any? %>
+      <div>
+        <ul>
+          <% @review.errors.full_messages.each do |err| %>
+            <li><%= err %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div>
+      <h2>Create review</h2>
+      <%= form_with model: @review, url: idea_reviews_path(@idea), local: true do |f| %>
+        <div>
+          <%= f.label :body%>
+          <%= f.text_field :body %>
+        </div>
+        <%= f.submit "Submit Review"%>
+      <% end %>
+    </div>
+    <% if !@reviews.nil? %>
+      <div>
+        <% @reviews.each do |review| %>
+          <div>
+            <p><%= review.body %></p>
+            <% if can?(:crud, review) %>
+              <%= link_to "Delete", idea_review_path(@idea, review), method: :delete %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

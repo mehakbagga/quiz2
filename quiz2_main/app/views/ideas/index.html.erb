@@ -1,0 +1,16 @@
+<div>
+  <% if !@ideas.nil? %>
+    <div>
+      <% @ideas.each do |idea| %>
+        <div>
+          <h3><%= link_to idea.title, idea_path(idea) %></h3>
+          <p><%= idea.body %></p>
+          <div>
+            <h6>By <%= idea.user.first_name %></h6>
+            <h6>Likes: <%= idea.likers.count %></h6>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
